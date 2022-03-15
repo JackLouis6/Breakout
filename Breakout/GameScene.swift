@@ -43,17 +43,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createBackground() {
-        let stars = SKTexture(imageNamed: "Stars")
+        let castle = SKTexture(imageNamed: "CastleBackground")
         for i in 0...1 {
-            let starsBackground = SKSpriteNode(texture: stars)
-            starsBackground.zPosition = -1
-            starsBackground.position = CGPoint(x: 0, y: starsBackground.size.height * CGFloat(i))
-            addChild(starsBackground)
-            let moveDown = SKAction.moveBy(x: 0, y: -starsBackground.size.height, duration: 20)
-            let moveReset = SKAction.moveBy(x: 0, y: starsBackground.size.height, duration: 0)
+            let castleBackground = SKSpriteNode(texture: castle)
+            castleBackground.zPosition = -1
+            castleBackground.position = CGPoint(x: 0, y: castleBackground.size.height * CGFloat(i))
+            addChild(castleBackground)
+            let moveDown = SKAction.moveBy(x: 0, y: -castleBackground.size.height, duration: 20)
+            let moveReset = SKAction.moveBy(x: 0, y: castleBackground.size.height, duration: 0)
             let moveLoop = SKAction.sequence([moveDown, moveReset])
             let moveForever = SKAction.repeatForever(moveLoop)
-            starsBackground.run(moveForever)
+            castleBackground.run(moveForever)
         }
     }
     
@@ -62,7 +62,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ball = SKShapeNode(circleOfRadius: 10)
         ball.position = CGPoint(x: frame.midX, y: frame.midY)
         ball.strokeColor = .black
-        ball.fillColor = .yellow
+        ball.fillColor = .black
         ball.name = "ball"
         // physics shape matches ball image
         ball.physicsBody = SKPhysicsBody(circleOfRadius: 10)
@@ -84,7 +84,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func makePaddle() {
         paddle.removeFromParent()   // remove the paddle, if it exists
-        paddle = SKSpriteNode(color: .white, size: CGSize(width: frame.width/4, height: 20))
+        paddle = SKSpriteNode(color: .white, size: CGSize(width: frame.width/5, height: 20))
         paddle.position = CGPoint(x: frame.midX, y: frame.minY + 125)
         paddle.name = "paddle"
         paddle.physicsBody = SKPhysicsBody(rectangleOf: paddle.size)
@@ -114,7 +114,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // now, figure the number and spacing of each row of bricks
         let count = Int(frame.width) / 55   // bricks per row
         let xOffset = (Int(frame.width) - (count * 55)) / 2 + Int(frame.minX) + 25
-        let colors: [UIColor] = [.blue, .orange, .green]
+        let colors: [UIColor] = [.red, .orange, .yellow]
         for r in 0..<3 {
             let y = Int(frame.maxY) - 15 - (r * 25)
             for i in 0..<count {
@@ -125,7 +125,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func makeLoseZone() {
-        loseZone = SKSpriteNode(color: .red, size: CGSize(width: frame.width, height: 50))
+        loseZone = SKSpriteNode(color: .gray, size: CGSize(width: frame.width, height: 50))
         loseZone.position = CGPoint(x: frame.midX, y: frame.minY + 25)
         loseZone.name = "loseZone"
         loseZone.physicsBody = SKPhysicsBody(rectangleOf: loseZone.size)
@@ -142,6 +142,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(playLabel)
         livesLabel.fontSize = 18
         livesLabel.fontColor = .black
+        livesLabel.fontName = "Arial"
         livesLabel.position = CGPoint(x: frame.minX + 50, y: frame.minY + 18)
         addChild(livesLabel)
         scoreLabel.fontSize = 18
@@ -189,11 +190,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 ball.physicsBody!.velocity.dx = ball.physicsBody!.velocity.dx * CGFloat(1.02)
                 ball.physicsBody!.velocity.dy = ball.physicsBody!.velocity.dy * CGFloat(1.02)
                 updateLabels()
-                if brick.color == .blue {
+                if brick.color == .red {
                     brick.color = .orange   // blue bricks turn orange
                 }
                 else if brick.color == .orange {
-                    brick.color = .green    // orange bricks turn green
+                    brick.color = .yellow    // orange bricks turn green
                 }
                 else {  // must be a green brick, which get removed
                     brick.removeFromParent()
